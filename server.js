@@ -4,11 +4,13 @@ var fs=require('fs');
 const https = require('https')
 var PORT = 10000;
 
-const httpsOptions = {
-    key: fs.readFileSync('security/selfsigned.key'),
-    cert: fs.readFileSync('security/selfsigned.crt')
-}
-app.https(httpsOptions).io();
+// const httpsOptions = {
+//     key: fs.readFileSync('security/selfsigned.key'),
+//     cert: fs.readFileSync('security/selfsigned.crt')
+// }
+// app.https(httpsOptions).io();
+
+app.https().io();
 
 console.log('server started on port ' + PORT);
 
