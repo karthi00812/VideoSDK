@@ -18,6 +18,8 @@ app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res){
 	// res.render('index.ejs');
+
+	console.log("request camr");
 	res.render('test.ejs');
 });
 
