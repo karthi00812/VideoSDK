@@ -22,7 +22,7 @@ app.get('/', function(req, res){
 	res.render('test.ejs');
 });
 
-app.listen(PORT,()=>{console.log(`Example app listening on port ${port}!`)});
+app.listen(PORT,()=>{console.log(`Example app listening on port ${PORT}!`)});
 
 
 app.io.route('ready', function(req) {
