@@ -16,10 +16,8 @@ app.http().io();
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res){
-	// res.render('index.ejs');
-
-	console.log("request camr");
-	res.render('test.ejs');
+	console.log("functioning....");
+	res.render('index.ejs');
 });
 
 app.listen(PORT,()=>{console.log(`Example app listening on port ${PORT}!`)});
