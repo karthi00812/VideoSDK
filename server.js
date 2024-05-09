@@ -2,7 +2,8 @@ var express = require('express.io');
 var app = express();
 var fs=require('fs');
 const https = require('https')
-var PORT = 10000;
+var PORT = process.env.PORT || 3001;
+
 
 // const httpsOptions = {
 //     key: fs.readFileSync('security/selfsigned.key'),
@@ -10,9 +11,7 @@ var PORT = 10000;
 // }
 // app.https(httpsOptions).io();
 
-app.https().io();
-
-console.log('server started on port ' + PORT);
+app.http().io();
 
 app.use(express.static(__dirname + '/public'));
 
@@ -23,7 +22,7 @@ app.get('/', function(req, res){
 	res.render('test.ejs');
 });
 
-app.listen(PORT);
+app.listen(PORT,()=>{console.log(`Example app listening on port ${port}!`)});
 
 
 app.io.route('ready', function(req) {
@@ -48,6 +47,3 @@ app.io.route('signal', function(req) {
 		message: req.data.message
     });
 })
-
-
-
