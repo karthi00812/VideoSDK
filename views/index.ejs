@@ -118,12 +118,14 @@
 					rtcPeerConn.addStream(stream);
 				}, logError);
 			} else {
-				navigator.mediaDevices.getUserMedia(constraints, function (stream) {
-					displaySignalMessage("going to display my stream...");
-					//myVideoArea.src = URL.createObjectURL(stream);
-					myVideoArea.srcObject = stream;
-					rtcPeerConn.addStream(stream);
-				}, logError);
+				navigator.mediaDevices.getUserMedia(constraints)
+					.then((stream) => {
+						displaySignalMessage("going to display my stream...");
+						//myVideoArea.src = URL.createObjectURL(stream);
+						myVideoArea.srcObject = stream;
+						rtcPeerConn.addStream(stream);
+					})
+					.catch(err => { logError(err) });
 			}
 
 		}
