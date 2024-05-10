@@ -120,10 +120,14 @@
 			} else {
 				navigator.mediaDevices.getUserMedia(constraints)
 					.then((stream) => {
-						displaySignalMessage("going to display my stream...");
-						//myVideoArea.src = URL.createObjectURL(stream);
-						myVideoArea.srcObject = stream;
-						rtcPeerConn.addStream(stream);
+						try {
+							displaySignalMessage("going to display my stream...");
+							//myVideoArea.src = URL.createObjectURL(stream);
+							myVideoArea.srcObject = stream;
+							rtcPeerConn.onaddstream(stream);
+						} catch (e) {
+							console.log(e);
+						}
 					})
 					.catch(err => { logError(err) });
 			}
