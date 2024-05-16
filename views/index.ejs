@@ -124,7 +124,7 @@
 							displaySignalMessage("going to display my stream...");
 							//myVideoArea.src = URL.createObjectURL(stream);
 							myVideoArea.srcObject = stream;
-							rtcPeerConn.addTrack(stream);
+							stream.getTracks().forEach((tracks)=>{rtcPeerConn.addTrack(tracks,stream)});
 						} catch (e) {
 							console.log(e);
 						}
