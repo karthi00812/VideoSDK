@@ -85,12 +85,12 @@
 				displaySignalMessage("on negotiation called");
 				// rtcPeerConn.createOffer(sendLocalDesc, logError);
 				rtcPeerConn.createOffer()
-				.then((desc)=>{
-					sendLocalDesc(desc);
-				})
-				.catch((e)=>{
-					console.log(e);
-				});
+					.then((desc) => {
+						sendLocalDesc(desc);
+					})
+					.catch((e) => {
+						console.log(e);
+					});
 			}
 
 			// once remote stream arrives, show it in the remote video element
@@ -122,7 +122,7 @@
 					displaySignalMessage("going to display my stream...");
 					//myVideoArea.src = URL.createObjectURL(stream);
 					myVideoArea.srcObject = stream;
-					stream.getTracks().forEach((tracks)=>{rtcPeerConn.addTrack(tracks,stream)});
+					stream.getTracks().forEach((tracks) => { rtcPeerConn.addTrack(tracks, stream) });
 				}, logError);
 			} else {
 				navigator.mediaDevices.getUserMedia(constraints)
@@ -131,7 +131,7 @@
 							displaySignalMessage("going to display my stream...");
 							//myVideoArea.src = URL.createObjectURL(stream);
 							myVideoArea.srcObject = stream;
-							stream.getTracks().forEach((tracks)=>{rtcPeerConn.addTrack(tracks,stream)});
+							stream.getTracks().forEach((tracks) => { rtcPeerConn.addTrack(tracks, stream) });
 						} catch (e) {
 							console.log(e);
 						}
@@ -150,10 +150,19 @@
 		}
 
 		function sendLocalDesc(desc) {
-			rtcPeerConn.setLocalDescription(desc, function () {
-				displaySignalMessage("sending local description");
-				io.emit('signal', { "type": "SDP", "message": JSON.stringify({ 'sdp': rtcPeerConn.localDescription }), "room": SIGNAL_ROOM });
-			}, logError);
+			// rtcPeerConn.setLocalDescription(desc, function () {
+			// 	displaySignalMessage("sending local description");
+			// 	io.emit('signal', { "type": "SDP", "message": JSON.stringify({ 'sdp': rtcPeerConn.localDescription }), "room": SIGNAL_ROOM });
+			// }, logError);
+
+			rtcPeerConn.setLocalDescription(desc)
+				.then(() => {
+					displaySignalMessage("sending local description");
+					io.emit('signal', { "type": "SDP", "message": JSON.stringify({ 'sdp': rtcPeerConn.localDescription }), "room": SIGNAL_ROOM });
+				})
+				.catch((e)=>{
+					console.log(e);
+				});
 		}
 
 		function logError(error) {
