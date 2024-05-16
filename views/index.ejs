@@ -31,17 +31,15 @@
 		var signalingArea = document.querySelector("#signalingArea");
 		var rtcBtn = document.querySelector("#rtcBtn");
 		var globalStream = null;
+		let recorder = null;
 
 		// record related code starts
 
 		rtcBtn.addEventListener('click', (e) => {
-			let recorder = new RecordRTCPromisesHandler(globalStream, {
-				type: 'video'
-			});
 
 			if (rtcBtn.dataset.state === "true") {
-				e.value = "Stop Recording";
-				e.data.state = "false";
+				rtcBtn.textContent = "Stop Recording";
+				rtcBtn.dataset.state = "false";
 				recorder.startRecording()
 					.then((e) => {
 						console.log("started");
@@ -163,6 +161,9 @@
 				displaySignalMessage("going to add their stream...");
 				// theirVideoArea.src = URL.createObjectURL(evt.stream);
 				globalStream = evt.streams[0];
+				recorder = new RecordRTCPromisesHandler(globalStream, {
+					type: 'video'
+				});
 				theirVideoArea.srcObject = evt.streams[0];
 			};
 
