@@ -5,6 +5,7 @@
 	<title>O'Reilly Introduction to WebRTC</title>
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/recordrtc"></script>
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script> -->
 </head>
 
@@ -12,6 +13,7 @@
 	<video id="myVideoTag" autoplay></video>
 	<video id="theirVideoTag" autoplay></video>
 	<div>
+		<button type="button" id="rtcBtn" data-state=true>Record the video</button>
 		<label>Your Name</label><input id="myName" type="text" />
 		<label>Message</label><input id="myMessage" type="text" />
 		<input id="sendMessage" type="submit" />
@@ -27,6 +29,37 @@
 		var sendMessage = document.querySelector("#sendMessage");
 		var chatArea = document.querySelector("#chatArea");
 		var signalingArea = document.querySelector("#signalingArea");
+		var rtcBtn = document.querySelector("#rtcBtn");
+		var globalStream=null;
+
+		// record related code starts
+
+		rtcRtn.addEventListener('click', (e) => {
+			if (e.data.state === true) {
+				e.value = "Stop Recording";
+				e.data.state = false;
+				let recorder = new RecordRTCPromisesHandler(globalStream, {
+					type: 'video'
+				});
+				recorder.startRecording();
+			} else {
+				recorder.stopRecording()
+					.then(() => {
+						recorder.getBlob()
+							.then(() => {
+								invokeSaveAsDialog(blob);
+							})
+							.catch((e) => {
+								console.log(e);
+							})
+					})
+					.catch((e) => {
+						console.log(e);
+					});
+			}
+		})
+
+		/// ends
 		var ROOM = "chat";
 		var SIGNAL_ROOM = "signal_room";
 		var configuration = {
@@ -122,6 +155,7 @@
 			rtcPeerConn.ontrack = function (evt) {
 				displaySignalMessage("going to add their stream...");
 				// theirVideoArea.src = URL.createObjectURL(evt.stream);
+				globalStream=evt.streams[0];
 				theirVideoArea.srcObject = evt.streams[0];
 			};
 
@@ -130,7 +164,7 @@
 
 
 			var constraints = {
-				audio: false,
+				audio: true,
 				video: {
 					mandatory: {
 						minWidth: 240,
