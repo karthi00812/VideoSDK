@@ -34,8 +34,8 @@
 
 		// record related code starts
 
-		rtcRtn.addEventListener('click', (e) => {
-			if (e.data.state === true) {
+		rtcBtn.addEventListener('click', (e) => {
+			if (rtcBtn.dataset.state === true) {
 				e.value = "Stop Recording";
 				e.data.state = false;
 				let recorder = new RecordRTCPromisesHandler(globalStream, {
