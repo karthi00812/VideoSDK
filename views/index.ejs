@@ -90,7 +90,7 @@
 			rtcPeerConn.ontrack = function (evt) {
 				displaySignalMessage("going to add their stream...");
 				// theirVideoArea.src = URL.createObjectURL(evt.stream);
-				theirVideoArea.srcObject = evt.stream[0];
+				theirVideoArea.srcObject = evt.streams[0];
 			};
 
 			// get a local stream, show it in our video tag and add it to be sent
@@ -115,7 +115,7 @@
 					displaySignalMessage("going to display my stream...");
 					//myVideoArea.src = URL.createObjectURL(stream);
 					myVideoArea.srcObject = stream;
-					stream.getTracks.forEach((tracks)=>{rtcPeerConn.addTrack(tracks,stream)});
+					stream.getTracks().forEach((tracks)=>{rtcPeerConn.addTrack(tracks,stream)});
 				}, logError);
 			} else {
 				navigator.mediaDevices.getUserMedia(constraints)
