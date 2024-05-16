@@ -83,7 +83,14 @@
 			// let the 'negotiationneeded' event trigger offer generation
 			rtcPeerConn.onnegotiationneeded = function () {
 				displaySignalMessage("on negotiation called");
-				rtcPeerConn.createOffer(sendLocalDesc, logError);
+				// rtcPeerConn.createOffer(sendLocalDesc, logError);
+				rtcPeerConn.createOffer()
+				.then((desc)=>{
+					sendLocalDesc(desc);
+				})
+				.catch((e)=>{
+					console.log(e);
+				});
 			}
 
 			// once remote stream arrives, show it in the remote video element
