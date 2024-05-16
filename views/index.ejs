@@ -20,7 +20,6 @@
 	</div>
 
 	<script>
-		alert("HI");
 		var myVideoArea = document.querySelector("#myVideoTag");
 		var theirVideoArea = document.querySelector("#theirVideoTag");
 		var myName = document.querySelector("#myName");
@@ -54,15 +53,41 @@
 			if (data.type != "user_here") {
 				var message = JSON.parse(data.message);
 				if (message.sdp) {
-					rtcPeerConn.setRemoteDescription(new RTCSessionDescription(message.sdp), function () {
-						// if we received an offer, we need to answer
-						if (rtcPeerConn.remoteDescription.type == 'offer') {
-							rtcPeerConn.createAnswer(sendLocalDesc, logError);
-						}
-					}, logError);
+					// rtcPeerConn.setRemoteDescription(new RTCSessionDescription(message.sdp), function () {
+					// 	// if we received an offer, we need to answer
+					// 	if (rtcPeerConn.remoteDescription.type == 'offer') {
+					// 		rtcPeerConn.createAnswer(sendLocalDesc, logError);
+					// 	}
+					// }, logError);
+
+					rtcPeerConn.setRemoteDescription(new RTCSessionDescription(message.sdp))
+						.then(() => {
+							if (rtcPeerConn.remoteDescription.type == 'offer') {
+
+								// rtcPeerConn.createAnswer(sendLocalDesc, logError);
+
+								rtcPeerConn.createAnswer()
+									.then((desc) => {
+										sendLocalDesc(desc);
+									})
+									.catch((e) => {
+										console.log(e);
+									})
+							}
+						})
+						.catch((e) => {
+							console.log(e);
+						})
+
 				}
 				else {
-					rtcPeerConn.addIceCandidate(new RTCIceCandidate(message.candidate));
+					// rtcPeerConn.addIceCandidate(new RTCIceCandidate(message.candidate));
+
+					rtcPeerConn.addIceCandidate(new RTCIceCandidate(message.candidate))
+						.catch((e) => {
+							console.log(e);
+						});
+
 				}
 			}
 
@@ -160,7 +185,7 @@
 					displaySignalMessage("sending local description");
 					io.emit('signal', { "type": "SDP", "message": JSON.stringify({ 'sdp': rtcPeerConn.localDescription }), "room": SIGNAL_ROOM });
 				})
-				.catch((e)=>{
+				.catch((e) => {
 					console.log(e);
 				});
 		}
